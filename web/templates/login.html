@@ -1,0 +1,64 @@
+<html>
+
+<head>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Garage</title>
+
+    <style>
+        @font-face {
+            font-family: Comfortaa;
+            src: url("{{ url_for('static', filename='fonts/Comfortaa-VariableFont_wght.ttf') }}");
+        }
+        
+        body {
+            background-image: url("{{ url_for('static', filename='images/background.svg') }}");
+        }
+    </style>
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/login.css') }}">
+
+</head>
+
+<body>
+
+    <form class="login-form" method="post" action="{{ url_for('auth.login_post') }}">
+
+        <h1 class="row center">Login</h1>
+
+        <div class="field">
+            <input type="text" required autocomplete="off" id="username" name="username">
+            <label for="username" title="Username" data-title="Username"></label>
+        </div>
+
+        <div class="field">
+            <input type="password" required autocomplete="off" id="password" name="password">
+            <label for="password" title="Password" data-title="Password"></label>
+        </div>
+
+		<div class="field">
+			<input type="checkbox" id="remember" name="remember">
+			<label for="remember" title="Remember me" data-title="Remember me"></label>
+		</div>
+
+	{% with messages = get_flashed_messages() %}
+	{% if messages %}
+        <div class="row">
+            <div class="error">
+	        {{ messages[0] }}
+            </div>
+        </div>
+	{% endif %}
+	{% endwith %}
+
+        <div class="row center">
+            <input id="submit" type="submit" value="Login">
+        </div>
+
+    </form>
+
+</body>
+
+</html>

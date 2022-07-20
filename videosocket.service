@@ -1,0 +1,12 @@
+[Unit]
+Description=Garage door opener video stream socket
+After=network.target
+
+[Service]
+User=dan
+Group=www-data
+WorkingDirectory=/home/dan/garagedoor
+ExecStart=/usr/bin/python3 /home/dan/garagedoor/web/videosocket.py
+
+[Install]
+WantedBy=multi-user.target
