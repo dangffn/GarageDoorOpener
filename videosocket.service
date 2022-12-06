@@ -5,8 +5,8 @@ After=network.target
 [Service]
 User=dan
 Group=www-data
-WorkingDirectory=/home/dan/garagedoor
-ExecStart=/usr/bin/python3 /home/dan/garagedoor/web/videosocket.py
+WorkingDirectory=/opt/garagedoor
+ExecStart=/usr/bin/python3 /opt/garagedoor/web/videosocket.py
 
 [Install]
 WantedBy=multi-user.target
