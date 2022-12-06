@@ -20,6 +20,8 @@
 
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/login.css') }}">
 
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
 </head>
 
 <body>
@@ -38,26 +40,36 @@
             <label for="password" title="Password" data-title="Password"></label>
         </div>
 
-		<div class="field">
-			<input type="checkbox" id="remember" name="remember">
-			<label for="remember" title="Remember me" data-title="Remember me"></label>
-		</div>
+        <div class="field">
+            <input type="checkbox" id="remember" name="remember">
+            <label for="remember" title="Remember me" data-title="Remember me"></label>
+        </div>
 
-	{% with messages = get_flashed_messages() %}
-	{% if messages %}
+        <div class="row center">
+            {{ recaptcha }}
+        </div>
+
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
         <div class="row">
             <div class="error">
-	        {{ messages[0] }}
+            {{ messages[0] }}
             </div>
         </div>
-	{% endif %}
-	{% endwith %}
+    {% endif %}
+    {% endwith %}
 
         <div class="row center">
             <input id="submit" type="submit" value="Login">
         </div>
 
     </form>
+
+    <script type="text/javascript">
+        var onloadCallback = function() {
+            console.log("Recaptcha is ready!")
+        }
+    </script>
 
 </body>
 
