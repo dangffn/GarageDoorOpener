@@ -1,6 +1,0 @@
-.env
-__pycache__/
-venv/
-web.sock
-migrations/
-**.swp

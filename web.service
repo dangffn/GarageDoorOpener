@@ -1,12 +1,13 @@
 [Unit]
-Description=Garage door opener API
+Description=Garage door opener
 After=network.target
 
 [Service]
 User=dan
 Group=www-data
-WorkingDirectory=/home/dan/garagedoor
-ExecStart=/home/dan/.local/bin/uwsgi --ini web.ini
+WorkingDirectory=/opt/garagedoor/
+ExecStartPre=npm run build
+ExecStart=npm run start
 
 [Install]
 WantedBy=multi-user.target
