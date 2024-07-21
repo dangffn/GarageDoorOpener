@@ -1,3 +1,8 @@
+@font-face {
+    font-family: Comfortaa;
+    src: url("fonts/Comfortaa-VariableFont_wght.ttf");
+}
+
 :root {
     --text-primary: black;
     --text-secondary: rgb(78, 78, 78);
@@ -15,13 +20,13 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    /* background-color: var(--background); */
     font-family: Comfortaa, sans-serif;
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
     box-sizing: border-box;
     padding: 2em;
+    background-image: url("images/background.svg");
 }
 
 .login-form {
