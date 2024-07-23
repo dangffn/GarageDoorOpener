@@ -1,6 +1,6 @@
 @font-face {
     font-family: Comfortaa;
-    src: url("fonts/Comfortaa-VariableFont_wght.ttf");
+    src: url("$public/fonts/Comfortaa-VariableFont_wght.ttf");
 }
 
 :root {
@@ -52,7 +52,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-image: url("images/background.svg");
+    background-image: url("$public/images/background.svg");
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
