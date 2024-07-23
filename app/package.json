@@ -17,16 +17,10 @@
     "@types/socket.io": "^3.0.1",
     "express": "^4.18.2",
     "onoff": "^6.0.3",
-    "opencv-build": "^0.1.9",
-    "opencv4nodejs": "^5.6.0",
     "socket.io": "^4.7.5",
     "socket.io-client": "^4.7.5",
     "tsx": "^4.5.0",
     "typescript": "^5.3.2",
     "vite-express": "*"
-  },
-  "opencv4nodejs": {
-    "autoBuildFlags": "-DOPENCV_GENERATE_PKGCONFIG=ON -DOPENCV_PC_FILE_NAME=opencv.pc",
-    "autoBuildOpencvVersion": "4.1.0"
   }
 }

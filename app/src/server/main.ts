@@ -1,8 +1,9 @@
 import express from "express";
 import ViteExpress from "vite-express";
-import cv from "opencv4nodejs";
 import http from "http";
 import { Server, Socket } from "socket.io";
+import { spawn } from "child_process";
+import readline from "readline";
 
 
 const GPIO_RELAY_PIN = 18;
@@ -11,11 +12,47 @@ const app = express();
 const httpServer = new http.Server(app);
 const io = new Server(httpServer);
 
-io.on("connection", (socket: Socket) => console.log("New connection", socket));
+const getFrame = (callback: (data: Buffer) => void) => {
+    const proc = spawn("python3", ["./camera.py"]);
+    proc.stderr.on("data", (err) => console.error(err.toString()))
+    const line = readline.createInterface({ input: proc.stdout });
+    line.on("line", callback);
+}
 
-const wCap = new cv.VideoCapture(0);
-wCap.set(cv.CAP_PROP_FRAME_WIDTH, 640); 
-wCap.set(cv.CAP_PROP_FRAME_HEIGHT, 480);
+let interval: NodeJS.Timeout | null = null;
+
+const startCamera = () => {
+    if (!interval) {
+        interval = setInterval(() => {
+            console.log("Camera running!");
+            getFrame((data) => {
+                io.to("video").emit("image", data.toString());
+            });
+        }, 1000);
+    }
+}
+
+const stopCamera = () => {
+    console.log("Camera stopping!");
+    if (interval) {
+        clearInterval(interval);
+        interval = null;
+    }
+}
+
+
+io.on("connection", (socket: Socket) => {
+    console.log("New connection", socket.rooms);
+    socket.join("video");
+    startCamera();
+
+    socket.on("disconnecting", () => {
+        const size = io.of("/").adapter.rooms.get("video")?.size || 1;
+        if (size <= 1) {
+            stopCamera();
+        }
+    });
+});
 
 app.post("/relay", (_, res) => {
     res.setHeader('Content-Type', 'application/json');
@@ -43,12 +80,6 @@ app.get("/readycheck", (_, res) => {
     res.setHeader('Content-Type', 'application/json');
     res.send({ "ok": true });
 });
-
-setInterval(()=>{ 
-    const frame = wCap.read(); 
-    const image = cv.imencode('.jpg', frame).toString('base64'); 
-    io.emit('image', image); 
-}, 1000) 
 
 ViteExpress.bind(app, httpServer);
 httpServer.listen(3000, () =>

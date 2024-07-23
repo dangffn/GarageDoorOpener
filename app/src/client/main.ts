@@ -151,7 +151,8 @@ socket.on('image', (data: string)=>{
     // Now we are getting the image and  
     // displaying it via img tag 
     const imageEle = document.getElementById('video') as HTMLImageElement; 
-    imageEle.src = `data:image/jpeg;base64,${data}`; 
+    imageEle.src = `data:image/jpeg;base64,${data}`;
+    console.log({ src: imageEle.src })
 }); 
 
 /**
