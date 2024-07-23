@@ -24,7 +24,6 @@ let interval: NodeJS.Timeout | null = null;
 const startCamera = () => {
     if (!interval) {
         interval = setInterval(() => {
-            console.log("Camera running!");
             getFrame((data) => {
                 io.to("video").emit("image", data.toString());
             });
