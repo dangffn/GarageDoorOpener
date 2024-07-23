@@ -6,7 +6,7 @@ import { spawn } from "child_process";
 import readline from "readline";
 
 
-const GPIO_RELAY_PIN = 18;
+const GPIO_RELAY_PIN = 536;
 
 const app = express();
 const httpServer = new http.Server(app);
@@ -53,18 +53,25 @@ io.on("connection", (socket: Socket) => {
     });
 });
 
+let relayTimeout = null;
+
 app.post("/relay", (_, res) => {
     res.setHeader('Content-Type', 'application/json');
 
+    if (relayTimeout) {
+        res.send({ "ok": false });
+        return;
+    }
     try {
         var Gpio = require("onoff").Gpio;
         var trigger = new Gpio(GPIO_RELAY_PIN, "out");
 
         trigger.writeSync(1);
 
-        setTimeout(() => {
+        relayTimeout = setTimeout(() => {
             trigger.writeSync(0);
             trigger.unexport();
+	    relayTimeout = null;
         }, 1000);
         console.log(`Successfully triggered relay`);
         res.send({ "ok": true });
@@ -77,7 +84,7 @@ app.post("/relay", (_, res) => {
 
 app.get("/readycheck", (_, res) => {
     res.setHeader('Content-Type', 'application/json');
-    res.send({ "ok": true });
+    res.send({ "ok": !relayTimeout });
 });
 
 ViteExpress.bind(app, httpServer);

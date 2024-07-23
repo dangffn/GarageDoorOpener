@@ -57,22 +57,18 @@ const toastMessage: ToastCmd = (message, status = "info", duration = 2000) => {
 }
 
 const runAction: RunActionCmd = async (btnRef, cmdString, cmdFunc) => {
-    let initialValue = btnRef.value;
+    let initialValue = btnRef.innerText;
     btnRef.dataset.processing = true;
     btnRef.disabled = true;
-    btnRef.value = cmdString;
+    btnRef.innerText = cmdString;
 
-    cmdFunc().then(() => {
-        // Success response.
-        btnRef.dataset.processing = false;
-        btnRef.disabled = false;
-        btnRef.value = initialValue;
-    }).catch(() => {
-        // Error response.
-        btnRef.dataset.processing = false;
-        btnRef.disabled = false;
-        btnRef.value = initialValue;
-    });
+	const btnEnable = () => setTimeout(() => {
+		btnRef.dataset.processing = false;
+		btnRef.disabled = false;
+		btnRef.innerText = initialValue;
+	}, 2000);
+
+    cmdFunc().then(btnEnable).catch(btnEnable);
 }
 
 const actionOpenDoor = async () => {
@@ -152,7 +148,6 @@ socket.on('image', (data: string)=>{
     // displaying it via img tag 
     const imageEle = document.getElementById('video') as HTMLImageElement; 
     imageEle.src = `data:image/jpeg;base64,${data}`;
-    console.log({ src: imageEle.src })
 }); 
 
 /**

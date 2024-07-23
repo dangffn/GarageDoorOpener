@@ -5,9 +5,9 @@ After=network.target
 [Service]
 User=dan
 Group=www-data
-WorkingDirectory=/opt/garagedoor/app/
-ExecStartPre=/usr/bin/npm run build
+WorkingDirectory=/usr/local/garagedoor/app
 ExecStart=/usr/bin/npm run start
+Restart=unless-stopped
 
 [Install]
 WantedBy=multi-user.target
