@@ -153,7 +153,6 @@ button:disabled {
 @media (max-width: 600px) {
     #app {
         align-items: start;
-        justify-content: space-between;
     }
 
     .camera {
