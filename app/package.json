@@ -1,7 +1,7 @@
 {
-  "name": "vite-typescript-starter",
+  "name": "garage-door-opener",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "scripts": {
     "dev": "nodemon -w src/server -x tsx src/server/main.ts",
     "start": "NODE_ENV=production tsx src/server/main.ts",

@@ -12,6 +12,16 @@ const app = express();
 const httpServer = new http.Server(app);
 const io = new Server(httpServer);
 
+// Timeout interval to refresh the camera image.
+let interval: NodeJS.Timeout | null = null;
+
+// Timeout set when triggering the relay.
+let relayTimeout: NodeJS.Timeout | null = null;
+
+/**
+ * Get a camera frame from the local Python script.
+ * @param callback callback function to execute on a frame buffer
+ */
 const getFrame = (callback: (data: Buffer) => void) => {
     const proc = spawn("python3", ["./camera.py"]);
     proc.stderr.on("data", (err) => console.error(err.toString()))
@@ -19,8 +29,9 @@ const getFrame = (callback: (data: Buffer) => void) => {
     line.on("line", callback);
 }
 
-let interval: NodeJS.Timeout | null = null;
-
+/**
+ * Start the camera timer, updates the video frame every second.
+ */
 const startCamera = () => {
     if (!interval) {
         interval = setInterval(() => {
@@ -31,6 +42,9 @@ const startCamera = () => {
     }
 }
 
+/**
+ * Stop the camera timer.
+ */
 const stopCamera = () => {
     console.log("Camera stopping!");
     if (interval) {
@@ -39,7 +53,9 @@ const stopCamera = () => {
     }
 }
 
-
+/**
+ * Bind the SocketIO handlers on new connections.
+ */
 io.on("connection", (socket: Socket) => {
     console.log("New connection", socket.rooms);
     socket.join("video");
@@ -53,8 +69,9 @@ io.on("connection", (socket: Socket) => {
     });
 });
 
-let relayTimeout = null;
-
+/**
+ * The /relay endpoint triggers the door to open or close.
+ */
 app.post("/relay", (_, res) => {
     res.setHeader('Content-Type', 'application/json');
 
@@ -82,6 +99,9 @@ app.post("/relay", (_, res) => {
     }
 });
 
+/**
+ * The /readycheck endpoint determines if the application is ready for a command.
+ */
 app.get("/readycheck", (_, res) => {
     res.setHeader('Content-Type', 'application/json');
     res.send({ "ok": !relayTimeout });

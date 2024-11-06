@@ -22,6 +22,7 @@ type RunActionCmd = (
 
 type ThisWindow = {
     toastMessage: ToastCmd;
+    checkServer: () => Promise<boolean>;
 } & Window & typeof globalThis;
 
 document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
@@ -86,9 +87,7 @@ const actionOpenDoor = async () => {
         });
         const data = await response.json();
 
-        result = (data && data.ok) === true;
-
-        if (result) {
+        if (data?.ok === true) {
             toastMessage("Open / close command succeeded", "success");
         } else {
             toastMessage("Open / close command failed", "error");
@@ -123,7 +122,8 @@ const checkServer = async () => {
 
 const actionButtonEnable = (val: boolean, skipToast = false) => {
     // enable or disable the action buttons on the page
-    for (let btn of document.getElementsByClassName("action-btn") as HTMLCollectionOf<ActionButton>) {
+    const actionBtns = document.getElementsByClassName("action-btn") as HTMLCollectionOf<ActionButton>;
+    for (let btn of actionBtns) {
         if (!btn.dataset.processing) {
             btn.disabled = !val
         }
@@ -162,9 +162,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Enable the open door button if the server is ready
     await checkServer();
-    // setTimeout(checkServer, 2000);
 
 });
 
 (window as ThisWindow).toastMessage = toastMessage;
-window.checkServer = checkServer;
+(window as ThisWindow).checkServer = checkServer;
